@@ -13,7 +13,7 @@
         {
             RoomTypesModel model = new RoomTypesModel();
 
-            model = _db.LoadData<RoomTypesModel, dynamic>("[dbo].[spRoomTypeDetails_GetById]",
+            model = _db.LoadData<RoomTypesModel>("[dbo].[spRoomTypeDetails_GetById]",
                                                          new { RoomTypeId = roomTypeId },
                                                          connectionStringName,
                                                          true).First();

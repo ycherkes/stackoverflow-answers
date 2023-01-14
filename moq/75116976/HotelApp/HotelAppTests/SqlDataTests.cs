@@ -1,5 +1,6 @@
 using Autofac.Extras.Moq;
 using HotelApp;
+using Moq;
 
 namespace HotelAppTests
 {
@@ -23,9 +24,12 @@ namespace HotelAppTests
 
             using (var mock = AutoMock.GetLoose())
             {
+                object parameter = null;
+
                 mock.Mock<ISqlDataAccess>()
-                        .Setup(x => x.LoadData<RoomTypesModel, dynamic>(sqlStatment, new { RoomTypeId = roomTypeId }, connectionStringName, true))
-                        .Returns(roomList);
+                    .Setup(x => x.LoadData<RoomTypesModel>(sqlStatment, It.IsAny<object>(), connectionStringName, true))
+                    .Callback<string, object, string, bool>((_, param1, _, _) => parameter = param1)
+                    .Returns(roomList);
 
                 var _dbMock = mock.Create<SqlData>();
 
@@ -35,7 +39,8 @@ namespace HotelAppTests
                 //Act 
                 var actual = _dbMock.GetRoomTypesDetailById(roomTypeId);
 
-                // Assurt
+                // Assert
+                Assert.Equivalent(new { RoomTypeId = roomTypeId }, parameter);
                 Assert.NotNull(actual);
                 Assert.Equal(actual, expected);
             }

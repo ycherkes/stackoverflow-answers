@@ -14,10 +14,10 @@ namespace HotelApp
             _config = config;
         }
 
-        public List<T> LoadData<T, U>(string sqlStatement,
-                                      U parameter,
-                                      string connectionStringName,
-                                      bool isStoredProcedure = false)
+        public List<T> LoadData<T>(string sqlStatement,
+                                   object parameter,
+                                   string connectionStringName,
+                                   bool isStoredProcedure = false)
         {
             string? connectionString = _config.GetConnectionString(connectionStringName);
             CommandType commandType = CommandType.Text;
@@ -32,6 +32,7 @@ namespace HotelApp
                 List<T> rows = connection.Query<T>(sqlStatement, parameter, commandType: commandType).ToList();
                 return rows;
             }
+
         }
     }
 }
